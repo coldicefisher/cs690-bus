@@ -4,8 +4,39 @@ using Spectre.Console;
 
 public class ConsoleUI {
     FileSaver fileSaver = new FileSaver("passenger-data.txt");
+    List<Loop> loops;
+    List<Stop> stops;
+
+    List<Driver> drivers;
+
+    public ConsoleUI() {
+
+        loops = new List<Loop>();
+        loops.Add(new Loop("Red"));
+        loops.Add(new Loop("Green"));
+        loops.Add(new Loop("Blue"));
+
+        stops = new List<Stop>();
+        stops.Add(new Stop("Music"));
+        stops.Add(new Stop("Tower"));
+        stops.Add(new Stop("Oakwood"));
+        stops.Add(new Stop("Anthony"));
+        stops.Add(new Stop("Letterman"));
+
+        loops[0].Stops.Add(stops[0]);
+        loops[0].Stops.Add(stops[1]);
+        loops[0].Stops.Add(stops[2]);   
+        loops[0].Stops.Add(stops[3]);
+        loops[0].Stops.Add(stops[4]);
+
+        drivers = new List<Driver>();
+        drivers.Add(new Driver("Jane Doe"));
+        drivers.Add(new Driver("Jamey Harris"));
+    }
+
 
     public void Show() {
+
         // string mode = AskForInput("Please select mode (driver of manager): ");
         string mode = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -15,13 +46,39 @@ public class ConsoleUI {
                 }));
 
         if (mode == "driver") {
+            Driver selectedDriver = AnsiConsole.Prompt(
+                new SelectionPrompt<Driver>()
+                    .Title("Select a driver")
+                    .AddChoices(drivers));
+
+            Console.WriteLine("Now you are driving as " + selectedDriver.Name + "!");
+
+
+            Loop selectedLoop = AnsiConsole.Prompt(
+                new SelectionPrompt<Loop>()
+                    .Title("Select a loop")
+                    .AddChoices(loops));
+            
+            
+            Console.WriteLine("You have selected  " + selectedLoop.Name + " loop!");
+
             string command;
 
             do {
-                string stopName = AskForInput("Enter stop name: ");
+                // string stopName = AskForInput("Enter stop name: ");
+
+                Stop selectedStop = AnsiConsole.Prompt(
+                new SelectionPrompt<Stop>()
+                    .Title("Select a stop")
+                    .AddChoices(selectedLoop.Stops));
+
+                Console.WriteLine("You have selected " + selectedStop.Name + " stop!");
+
                 int boarded = int.Parse(AskForInput("Enter number of boarded passengers: "));
 
-                fileSaver.AppendLine("passenger-data.txt", stopName + ":" + boarded);
+                PassengerData data = new PassengerData(boarded, selectedStop, selectedLoop, selectedDriver);
+                fileSaver.AppendData(data);
+                // fileSaver.AppendLine("passenger-data.txt", selectedStop.Name + ":" + boarded);
                 // command = AskForInput("Enter command (end OR continue): ");
                 command = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()

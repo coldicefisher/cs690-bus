@@ -1,5 +1,8 @@
 namespace BusShuttle.Tests;
 
+using Xunit;
+using System;
+using System.IO;
 using BusShuttle;
 
 public class FileSaverTests
@@ -15,11 +18,23 @@ public class FileSaverTests
     
 
     [Fact]
-    public void FileSaverTests()
+    public void Test_FileSaver_Append()
     {
         fileSaver.AppendLine("Hello, World!");
 
         var contentFromFile = File.ReadAllText(testFileName);
         Assert.Equal("Hello, World!" + Environment.NewLine, contentFromFile);
     }   
+
+    [Fact]
+    public void Test_FileSaver_AppendData()
+    {
+        Stop sampleStop = new Stop("MyStop");
+        Loop sampleLoop = new Loop("MyLoop");
+        Driver sampleDriver = new Driver("Sample");
+        PassengerData data = new PassengerData(5, sampleStop, sampleLoop, sampleDriver);
+        fileSaver.AppendData(data); 
+        var contentFromFile = File.ReadAllText(testFileName);
+        Assert.Equal("Sample:MyLoop:MyStop:5" + Environment.NewLine, contentFromFile);
+    }
 }

@@ -7,6 +7,9 @@ public class Stop {
         this.Name = name;
     }
 
+    public override string ToString() {
+        return this.Name;
+    }
 }
 
 public class Driver {
@@ -14,6 +17,10 @@ public class Driver {
 
     public Driver(string name) {
         this.Name = name;
+    }
+
+    public override string ToString() {
+        return this.Name;
     }
 
 }
@@ -26,6 +33,9 @@ public class Loop {
         this.Stops = new List<Stop>();
     }
 
+    public override string ToString() {
+        return this.Name;
+    }
 }
 
 public class PassengerData {
