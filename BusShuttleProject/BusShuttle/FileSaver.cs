@@ -7,7 +7,11 @@ public class FileSaver {
 
     public FileSaver(string fileName) {
         this.fileName = fileName;
-        File.Create(fileName).Close();
+        if(!File.Exists(fileName))
+        {
+            File.Create(fileName).Close();    
+        }
+        
 
     }
 
