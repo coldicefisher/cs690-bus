@@ -67,6 +67,49 @@ public class ConsoleUI {
                             "continue", "end"
                         }));
             } while (command != "end");
+        } else if (mode == "manager") {
+            
+            string command;
+            do {
+                command = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Select an action:")
+                        .AddChoices(new[] {
+                            "add stop", "delete stop", "list stops", "end"
+                        }));
+
+                if (command == "add stop") {
+                    string newStopName = AskForInput("Enter new stop name: ");
+                    dataManager.AddStop(new Stop(newStopName));
+                    dataManager.SynchronizeStops();
+
+                    dataManager.SynchronizeStops();
+                    Console.WriteLine("New stop added: " + newStopName);
+
+
+                } else if (command == "delete stop") {
+                    Stop stopToDelete = AnsiConsole.Prompt(
+                        new SelectionPrompt<Stop>()
+                            .Title("Select a stop to delete:")
+                            .AddChoices(dataManager.Stops));
+                    
+                    dataManager.RemoveStop(stopToDelete);
+                    dataManager.SynchronizeStops();
+                    Console.WriteLine("Stop deleted: " + stopToDelete.Name);
+
+                
+                } else if (command == "list stops") {
+                    var table = new Table();
+                    table.AddColumn("Stop Name");
+                    
+                    Console.WriteLine("Current stops:");
+                    foreach (var stop in dataManager.Stops) {
+                        table.AddRow(stop.Name);
+                    }
+                    AnsiConsole.Write(table);
+                }
+
+            } while (command != "end");
         }
     }
 
